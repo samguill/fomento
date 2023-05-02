@@ -13,7 +13,9 @@ pwd: dbpass
 
 ## Buil/Rebuild web image
 docker-compose stop
+
 docker-compose build web
+
 docker-compose up -d
 
 ## to load data into the database
