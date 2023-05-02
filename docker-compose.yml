@@ -1,0 +1,29 @@
+version: '3.9'
+
+x-back: &default-back
+  build:
+      context: .
+  restart: on-failure
+  volumes:
+      - ./:/usr/src/app
+  env_file:
+      - ./config/.env
+services:
+  web:
+    <<: *default-back
+    command: python manage.py runserver 0.0.0.0:8000
+    depends_on:
+      - postgres
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgres://fomento@db/fomentodb
+  postgres:
+    image: postgres:15.2-bullseye
+    hostname: db
+    environment:
+      POSTGRES_USER: fomento
+      POSTGRES_DB: fomentodb
+      POSTGRES_PASSWORD: dbpass
+    ports:
+      - 5432:5432
