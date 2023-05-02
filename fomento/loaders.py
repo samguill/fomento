@@ -59,10 +59,11 @@ class Loader:
     def append_rows_to_tmp(cls, df):
         df['day'] = df['day'].apply(str)
         df['day'] = df['day'].str.rjust(2, '0')
-        df['fomento'] = df['fomento'].fillna(0.00)
+        df['fomento'] = df['fomento'].fillna('0,00')
         df['fomento'] = df['fomento'].str.replace('.', '').str.replace(',', '.').astype(float)
         engine = cls.get_engine()
         df.to_sql(FomentoTmp._meta.db_table, if_exists="replace", con=engine, index=False)
+        FomentoTmp.objects.filter(fomento__isnull=True).update(fomento=0.00)
 
 
 class ParserFileAlreadyExists(Exception):
